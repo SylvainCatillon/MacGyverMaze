@@ -24,21 +24,18 @@ class Map:
         self.height = height
         self.width = len(squares_list[0])
         self.current_position = self.start
-        self.directions = ["N", "E", "S", "W"]
+        self.directions = {
+            "N": self.current_north, "E": self.current_east, "S": self.current_south, "W": self.current_west}
 
-    @property
     def current_north(self):
         return (self.current_position[0], self.current_position[1]+1)
 
-    @property
     def current_east(self):
         return (self.current_position[0] + 1, self.current_position[1])
 
-    @property
     def current_south(self):
         return (self.current_position[0], self.current_position[1] - 1)
 
-    @property
     def current_west(self):
         return (self.current_position[0] - 1, self.current_position[1])
 
@@ -50,30 +47,30 @@ class Map:
     def index_to_coord(n):
         return n+1
 
-
     def set_current_position(self, direction):
         if direction == "N":
-            self.current_position = self.current_north
+            self.current_position = self.current_north()
         if direction == "E":
-            self.current_position = self.current_east
+            self.current_position = self.current_east()
         if direction == "S":
-            self.current_position = self.current_south
+            self.current_position = self.current_south()
         if direction == "W":
-            self.current_position = self.current_west
+            self.current_position = self.current_west()
 
     def get_square(self,x, y):
         """Return the status of the square"""
         return self.squares_list[self.coord_to_index(y)][self.coord_to_index(x)]
 
-    def is_wall(self, x, y):
+    def is_wall(self, coord):
         """Return true if there is a wall on the square"""
-        return self.get_square(x, y) == "1"
+        return self.get_square(coord[0], coord[1]) == "1"
 
-    """def get_available_directions(self):
-        x = self.current_position[0]
-        y = self.current_position[1]
+    def get_available_directions(self):
         available_directions = []
-        if self.is_wall()"""
+        for key in self.directions:
+            if not self.is_wall(self.directions[key]()):
+                available_directions.append(key)
+        return available_directions
 
 
 
