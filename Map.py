@@ -1,7 +1,8 @@
 
 class Map:
-    """Get the Map from a .txt file, stocking the squares as a list (y indexes) of lists (x indexes)
-        .txt legend: 0 == clear, 1 == wall, S == stars, E == end"""
+    """Get the Map from a .txt file, stocking the squares as a list (y indexes) of lists (x indexes).
+    maps must be squares
+    .txt legend: 0 == clear, 1 == wall, S == stars, E == end"""
 
     CLEAR_SQUARE = "0"
     WALL = "1"
@@ -9,55 +10,56 @@ class Map:
     END = "E"
 
     def __init__(self, map_name):
-        self.squares_list, self.start, self.end = self.file_to_map(map_name)
-        self.height = len(self.squares_list)
-        self.width = len(self.squares_list[0])
+        self.squares_dict, self.start, self.end, self.height, self.width = self.file_to_map(map_name)
         self.current_position = self.start
-        self.directions = {
+        self.directions_dict = {
             "N": self.current_north, "E": self.current_east, "S": self.current_south, "W": self.current_west}
 
     def current_north(self):
-        return (self.current_position[0], self.current_position[1]+1)
+        if self.current_position[1] == self.height:
+            return None
+        return self.current_position[0], self.current_position[1]+1
 
     def current_east(self):
-        return (self.current_position[0] + 1, self.current_position[1])
+        if self.current_position[0] == self.width:
+            return None
+        return self.current_position[0] + 1, self.current_position[1]
 
     def current_south(self):
-        return (self.current_position[0], self.current_position[1] - 1)
+        if self.current_position[1] == 1:
+            return None
+        return self.current_position[0], self.current_position[1] - 1
 
     def current_west(self):
-        return (self.current_position[0] - 1, self.current_position[1])
-
-    @staticmethod
-    def coord_to_index(n):
-        return n-1
-
-    @staticmethod
-    def index_to_coord(n):
-        return n+1
+        if self.current_position[0] == 1:
+            return None
+        return self.current_position[0] - 1, self.current_position[1]
 
     def file_to_map(self, map_name):
-        """Read the map file, stocking the squares as a list (y indexes) of lists (x indexes), and set start and end"""
+        """Read the map file, stocking squares in dict (keys == (x, y)), and set start, end, height and width"""
         file_name = map_name + ".txt"
-        squares_list = []
+        squares_dict = {}
         with open(file_name, "r") as file:
             string = file.read()
             y_list = string.split("\n")
             height = len(y_list)
-            for i in range(height-1, -1, -1):  # Run backwards trough y_list
-                x_list = []
-                for j, e in enumerate(y_list[i]):
-                    if e == self.START:
-                        start = (j+1, height-i)  # Create a tuple with (x,y). Height-i because running backwards
-                    elif e == self.END:
-                        end = (j+1, height-i)  # Create a tuple with (x,y). Height-i because running backwards
-                    x_list.append(e)
-                squares_list.append(x_list)
-        return squares_list, start, end
+            y = height+1
+            for e in y_list:
+                y -= 1
+                x = 0
+                for f in e:
+                    x += 1
+                    squares_dict[(x, y)] = f
+                    if f == self.START:
+                        start = (x, y)
+                    elif f == self.END:
+                        end = (x, y)
+            width = x
+        return squares_dict, start, end, height, width
 
     def set_current_position(self, chosen_direction):
         """Take the direction chosen by the player, and set his position"""
-        #To do: add raise error if chosen_direction not in get_available_directions()
+        # To do: add raise error if chosen_direction not in get_available_directions()
         if chosen_direction == "N":
             self.current_position = self.current_north()
         if chosen_direction == "E":
@@ -67,19 +69,20 @@ class Map:
         if chosen_direction == "W":
             self.current_position = self.current_west()
 
-    def get_square(self,x, y):
+    def get_square(self, cords):
         """Return the status of the square"""
-        return self.squares_list[self.coord_to_index(y)][self.coord_to_index(x)]
+        return self.squares_dict[cords]
 
-    def is_wall(self, coord):
+    def is_wall(self, cords):
         """Return true if there is a wall on the square"""
-        return self.get_square(coord[0], coord[1]) == self.WALL
+        return self.get_square(cords) == self.WALL
 
     def get_available_directions(self):
         """Return a list of the current available directions"""
         available_directions = []
-        for key in self.directions:
-            if not self.is_wall(self.directions[key]()):
+        for key in self.directions_dict:
+            direction = self.directions_dict[key]()
+            if direction is not None and not self.is_wall(direction):
                 available_directions.append(key)
         return available_directions
 
