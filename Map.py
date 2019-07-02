@@ -1,28 +1,17 @@
 
 class Map:
-    """The map of the game"""
+    """Get the Map from a .txt file, stocking the squares as a list (y indexes) of lists (x indexes)
+        .txt legend: 0 == clear, 1 == wall, S == stars, E == end"""
+
+    CLEAR_SQUARE = "0"
+    WALL = "1"
+    START = "S"
+    END = "E"
 
     def __init__(self, map_name):
-        """Get the Map from a .txt file, stocking the squares as a list (y indexes) of lists (x indexes)
-        .txt legend: 0 == clear, 1 == wall, S == stars, E == end"""
-        file_name = map_name + ".txt"
-        squares_list = []
-        with open(file_name, "r") as file:
-            string = file.read()
-            y_list = string.split("\n")
-            height = len(y_list)
-            for i in range(height-1, -1, -1):  # Run backwards trough y_list
-                x_list = []
-                for j, e in enumerate(y_list[i]):
-                    if e == "S":
-                        self.start = (j+1, height-i)  # Create a tuple with (x,y). Height-i because running backwards
-                    elif e == "E":
-                        self.end = (j+1, height-i)  # Create a tuple with (x,y). Height-i because running backwards
-                    x_list.append(e)
-                squares_list.append(x_list)
-        self.squares_list = squares_list
-        self.height = height
-        self.width = len(squares_list[0])
+        self.squares_list, self.start, self.end = self.file_to_map(map_name)
+        self.height = len(self.squares_list)
+        self.width = len(self.squares_list[0])
         self.current_position = self.start
         self.directions = {
             "N": self.current_north, "E": self.current_east, "S": self.current_south, "W": self.current_west}
@@ -47,14 +36,35 @@ class Map:
     def index_to_coord(n):
         return n+1
 
-    def set_current_position(self, direction):
-        if direction == "N":
+    def file_to_map(self, map_name):
+        """Read the map file, stocking the squares as a list (y indexes) of lists (x indexes), and set start and end"""
+        file_name = map_name + ".txt"
+        squares_list = []
+        with open(file_name, "r") as file:
+            string = file.read()
+            y_list = string.split("\n")
+            height = len(y_list)
+            for i in range(height-1, -1, -1):  # Run backwards trough y_list
+                x_list = []
+                for j, e in enumerate(y_list[i]):
+                    if e == self.START:
+                        start = (j+1, height-i)  # Create a tuple with (x,y). Height-i because running backwards
+                    elif e == self.END:
+                        end = (j+1, height-i)  # Create a tuple with (x,y). Height-i because running backwards
+                    x_list.append(e)
+                squares_list.append(x_list)
+        return squares_list, start, end
+
+    def set_current_position(self, chosen_direction):
+        """Take the direction chosen by the player, and set his position"""
+        #To do: add raise error if chosen_direction not in get_available_directions()
+        if chosen_direction == "N":
             self.current_position = self.current_north()
-        if direction == "E":
+        if chosen_direction == "E":
             self.current_position = self.current_east()
-        if direction == "S":
+        if chosen_direction == "S":
             self.current_position = self.current_south()
-        if direction == "W":
+        if chosen_direction == "W":
             self.current_position = self.current_west()
 
     def get_square(self,x, y):
@@ -63,16 +73,15 @@ class Map:
 
     def is_wall(self, coord):
         """Return true if there is a wall on the square"""
-        return self.get_square(coord[0], coord[1]) == "1"
+        return self.get_square(coord[0], coord[1]) == self.WALL
 
     def get_available_directions(self):
+        """Return a list of the current available directions"""
         available_directions = []
         for key in self.directions:
             if not self.is_wall(self.directions[key]()):
                 available_directions.append(key)
         return available_directions
-
-
 
 
 """map = Map("facile")
