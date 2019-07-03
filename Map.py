@@ -9,16 +9,20 @@ class Map:
     START = "S"
     END = "E"
 
-    def __init__(self, map_name):
-        self.squares_dict, self.start, self.end, self.height, self.width = self.file_to_map(map_name)
+    def __init__(self):
+        self.squares_dict = {}
+        self.start = (0, 0)
+        self.end = (0, 0)
+        self.height = 15
+        self.width = 15
         self.current_position = self.start
         self.directions_dict = {
-            "N": self.current_north, "E": self.current_east, "S": self.current_south, "W": self.current_west}
+            "N": self.current_north, "E": self.current_east, "S": self.current_south, "W": self.current_west}  # marche en python mais pas d'autres langages... Changer?
 
     def current_north(self):
         if self.current_position[1] == self.height:
             return None
-        return self.current_position[0], self.current_position[1]+1
+        return self.current_position[0], self.current_position[1] - 1
 
     def current_east(self):
         if self.current_position[0] == self.width:
@@ -26,39 +30,39 @@ class Map:
         return self.current_position[0] + 1, self.current_position[1]
 
     def current_south(self):
-        if self.current_position[1] == 1:
+        if self.current_position[1] == 0:
             return None
-        return self.current_position[0], self.current_position[1] - 1
+        return self.current_position[0], self.current_position[1] + 1
 
     def current_west(self):
-        if self.current_position[0] == 1:
+        if self.current_position[0] == 0:
             return None
         return self.current_position[0] - 1, self.current_position[1]
 
-    def file_to_map(self, map_name):
+    def choose_map(self, map_name):
         """Read the map file, stocking squares in dict (keys == (x, y)), and set start, end, height and width"""
         file_name = map_name + ".txt"
-        squares_dict = {}
         with open(file_name, "r") as file:
             string = file.read()
             y_list = string.split("\n")
             height = len(y_list)
-            y = height+1
+            self.height = height
+            y = -1
             for e in y_list:
-                y -= 1
-                x = 0
+                y += 1
+                x = -1
                 for f in e:
                     x += 1
-                    squares_dict[(x, y)] = f
+                    self.squares_dict[(x, y)] = f
                     if f == self.START:
-                        start = (x, y)
+                        self.start = (x, y)
                     elif f == self.END:
-                        end = (x, y)
-            width = x
-        return squares_dict, start, end, height, width
+                        self.end = (x, y)
+        self.width = x + 1  # length == last index + 1
+        self.current_position = self.start
 
     def set_current_position(self, chosen_direction):
-        """Take the direction chosen by the player, and set his position"""
+        """Take the direction chosen by the player ("N", "E", "S" or "W"), and set his position"""
         # To do: add raise error if chosen_direction not in get_available_directions()
         if chosen_direction == "N":
             self.current_position = self.current_north()
@@ -71,6 +75,8 @@ class Map:
 
     def get_square(self, cords):
         """Return the status of the square"""
+        if cords == self.current_position:
+            return "P"
         return self.squares_dict[cords]
 
     def is_wall(self, cords):

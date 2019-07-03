@@ -1,27 +1,25 @@
 from Map import *
+from Display import *
 
 
 def init_game():
-    map = Map("facile")
-    print("Welcome in the game! You are at position {}".format(map.current_position))
-    return map
+    current_map = Map()
+    current_map.choose_map("facile")  # add input when several maps
+    return current_map
 
 
-def play(map):
-    while map.current_position != map.end:
-        inp = input("Choose a direction: {}".format(map.get_available_directions()))
-        if inp.lower() == "q":
-            print("Thank you for playing")
-            break
-        elif inp.upper() not in map.get_available_directions():
-            print("Wrong input")
-            return play(map)
-        print(inp)
-        map.set_current_position(inp.upper())
-        print("You are at {}".format(map.current_position))
-    if map.current_position == map.end:
+def play(current_map):
+    while current_map.current_position != current_map.end:
+        display_map(current_map)
+        inp = ""
+        while inp not in current_map.get_available_directions():
+            inp = input("Choose a direction: {}".format(current_map.get_available_directions())).upper()
+            if inp == "Q":
+                print("Thank you for playing")
+                break
+        current_map.set_current_position(inp)
+    if current_map.current_position == current_map.end:
         print("Congratulations, you reached the exit!!!")
 
 
-current_map = init_game()
-play(current_map)
+play(init_game())
