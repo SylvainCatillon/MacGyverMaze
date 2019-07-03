@@ -8,11 +8,17 @@ class Display:
             "congrats": "Congratulations, you reached the exit!!!",
             "game_over": "How unfortunate, you're dead!",
             "end": "Thank you for playing"
+        },
+        "francais": {
+            "welcome": "Bienvenue dans le jeu MazeGyver! Trouverez-vous la sortie?",
+            "congrats": "Bravo, vous êtes sorti vivant du labyrinthe!!!",
+            "game_over": "Dommage, vous êtes mort!",
+            "end": "Merci d'avoir joué."
         }
     }
 
-    def __init__(self, language, current_map):
-        self.language_dict = self.LANGUAGE_DICT[language]
+    def __init__(self, current_map):
+        self.language_dict = self.LANGUAGE_DICT["english"]
         self.current_map = current_map
 
     @property
@@ -30,6 +36,16 @@ class Display:
     @property
     def end(self):
         return self.language_dict["end"]
+
+    @property
+    def available_languages(self):
+        return self.LANGUAGE_DICT.keys()
+
+    def choose_language(self, language):
+        self.language_dict = self.LANGUAGE_DICT[language]
+
+    def say_welcome(self):
+        print(self.welcome)
 
     def display_map(self):
         display_string = ""

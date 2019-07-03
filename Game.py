@@ -7,19 +7,20 @@ class Game:
 
     def __init__(self):
         self.map = Map()
-        self.map.choose_map("facile")  # add input
-        self.display = Display("english", self.map)  # add input
+        self.display = Display(self.map)
 
-    def choose_map(self):
-        self.map.choose_map("facile")  # add input
+    def choose_map(self, map_name):
+        self.map.choose_map(map_name)
 
     def play(self):
+        self.display.choose_language("english")  # add input
+        self.display.say_welcome()
+        self.choose_map("facile")  # add input
         while self.map.current_position != self.map.end:
             self.display.display_map()
             inp = ""
             while inp not in self.map.get_available_directions():
                 inp = input("Choose a direction: {}".format(self.map.get_available_directions())).upper()
-                print(inp)
                 if inp == "Q":
                     break
             if inp == "Q":
