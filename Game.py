@@ -1,5 +1,6 @@
 from Map import *
 from Display import *
+from PyGame import *
 
 
 class Game:
@@ -9,7 +10,7 @@ class Game:
 
     def __init__(self):
         self.map = Map()
-        self.display = Display(self.map)
+        self.display = GameDisplay(self.map)
         self.search_dict = {}
         self.found_list = []
 
@@ -17,12 +18,12 @@ class Game:
         self.map.choose_map(map_name)
 
     def play(self):
-        self.display.choose_language("english")  # add input
-        self.display.welcome()
+        #self.display.choose_language("english")  # add input
+        #self.display.welcome()
         self.choose_map("facile")  # add input
+        self.display.start()
         self.search_dict = self.map.place_items(self.ITEM_NAMES_LIST)
         while not self.end():
-            self.display.display_map()
             inp = ""
             while inp not in self.map.get_available_directions():
                 inp = input("Choose a direction: {}".format(self.map.get_available_directions())).upper()
@@ -33,7 +34,7 @@ class Game:
                 break
             self.map.set_current_position(inp)
             self.check_items()
-        self.display.end()
+        #self.display.end()
 
     def check_items(self):
         """Check if the player found an item"""
@@ -53,10 +54,10 @@ class Game:
         for name in self.ITEM_NAMES_LIST:  # Replace by len(found_list) == len(ITEM_NAMES)??
             if name not in self.found_list:
                 victory = False
-        if victory:
-            self.display.congrats()
-        else:
-            self.display.death()
+        #if victory:
+            #self.display.congrats()
+        #else:
+            #self.display.death()
         return True
 
     @staticmethod
