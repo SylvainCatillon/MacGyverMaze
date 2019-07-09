@@ -22,7 +22,7 @@ class Game:
         #self.display.welcome()
         self.choose_map("facile")  # add input
         self.display.start()
-        self.search_dict = self.map.place_items(self.ITEM_NAMES_LIST)
+        """self.search_dict = self.map.place_items(self.ITEM_NAMES_LIST)
         while not self.end():
             inp = ""
             while inp not in self.map.get_available_directions():
@@ -34,7 +34,7 @@ class Game:
                 break
             self.map.set_current_position(inp)
             self.check_items()
-        #self.display.end()
+        #self.display.end()"""
 
     def check_items(self):
         """Check if the player found an item"""
