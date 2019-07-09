@@ -34,19 +34,20 @@ class GameDisplay:
                     self.running = False
                 if event.type == pg.KEYDOWN:
                     print("Keydown")
-                    if event.type == pg.K_UP:
+                    if event.key == pg.K_UP:
                         print("UP")
                         if "N" in available_directions:
                             self.move_player("N")
-                    elif event.type == pg.K_RIGHT:
+                    elif event.key == pg.K_RIGHT:
                         if "E" in available_directions:
                             self.move_player("E")
-                    elif event.type == pg.K_DOWN:
+                    elif event.key == pg.K_DOWN:
                         if "S" in available_directions:
                             self.move_player("S")
-                    elif event.type == pg.K_LEFT:
+                    elif event.key == pg.K_LEFT:
                         if "W" in available_directions:
                             self.move_player("W")
+                    pg.display.update()
 
     def create_map(self):
         for cords, rect in self.rect_dict.items():
