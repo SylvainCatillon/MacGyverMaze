@@ -70,30 +70,15 @@ class Map:
         self.width = x + 1  # length == last index + 1
         self.current_position = self.start
 
-    def place_items(self, names_list):
+    def place_items(self, items_dict):
         """Place randomly the items on the map
-        Take a list of items names, return a dict of items, with cords (x, y) as key, and Object Item as value"""
-        items_dict = {}
+        Take a dict of items,and give random cords to each item"""
         floor_list = [key for key, value in self.squares_dict.items()
                       if key != self.start and key != self.keeper and value != self.WALL]
-        for item_name in names_list:
+        for item in items_dict.values():
             cords = floor_list.pop(randrange(len(floor_list)))
-            items_dict[cords] = Item(item_name, cords)
-            self.squares_dict[cords] = item_name[0].upper()
-        return items_dict
-
-    """
-    OLD METHOD WITH CHOICE/REMOVE INSTEAD OF RANDRANGE/POP
-    def place_items(self, names_list):
-        items_dict = {}
-        floor_list = [key for key, value in self.squares_dict.items()
-                      if key != self.start and key != self.keeper and value != self.WALL]
-        for item_name in names_list:
-            cords = choice(floor_list)
-            items_dict[cords] = Item(item_name, cords)
-            self.squares_dict[cords] = item_name[0].upper()
-            floor_list.remove(cords)
-        return items_dict"""
+            item.cords = cords
+            self.squares_dict[cords] = item.symbol
 
     def set_current_position(self, chosen_direction):
         """Take the direction chosen by the player ("N", "E", "S" or "W"), and set his position"""
@@ -109,8 +94,6 @@ class Map:
 
     def get_square(self, cords):
         """Return the status of the square"""
-        if cords == self.current_position:
-            return "P"
         return self.squares_dict[cords]
 
     def is_wall(self, cords):

@@ -48,7 +48,10 @@ class Display:
         display_string = ""
         for y in range(self.current_map.height):
             for x in range(self.current_map.width):
-                display_string += self.current_map.get_square((x, y)).replace("0", " ")
+                if (x, y) == self.current_map.current_position:
+                    display_string += "P"
+                else:
+                    display_string += self.current_map.get_square((x, y)).replace("0", " ")
             display_string += "\n"
         print(display_string)
 
