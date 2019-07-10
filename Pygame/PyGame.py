@@ -33,9 +33,7 @@ class GameDisplay:
                 if event.type == pg.QUIT:
                     self.running = False
                 if event.type == pg.KEYDOWN:
-                    print("Keydown")
                     if event.key == pg.K_UP:
-                        print("UP")
                         if "N" in available_directions:
                             self.move_player("N")
                     elif event.key == pg.K_RIGHT:

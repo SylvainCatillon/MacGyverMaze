@@ -1,4 +1,3 @@
-
 class Display:
     """The class in charge of the display"""
 

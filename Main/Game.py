@@ -1,6 +1,5 @@
 from Map import *
-from Display import *
-from PyGame import *
+from Pygame.PyGame import *
 
 
 class Game:
