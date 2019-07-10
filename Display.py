@@ -18,9 +18,9 @@ class Display:
         }
     }
 
-    def __init__(self, current_map):
+    def __init__(self, game):
         self.language_dict = self.LANGUAGE_DICT["english"]
-        self.current_map = current_map
+        self.game = game
 
     @property
     def available_languages(self):
@@ -46,12 +46,12 @@ class Display:
 
     def display_map(self):
         display_string = ""
-        for y in range(self.current_map.height):
-            for x in range(self.current_map.width):
-                if (x, y) == self.current_map.current_position:
+        for y in range(self.game.map.height):
+            for x in range(self.game.map.width):
+                if (x, y) == self.game.player.cords:
                     display_string += "P"
                 else:
-                    display_string += self.current_map.get_square((x, y)).replace("0", " ")
+                    display_string += self.game.map.get_square((x, y)).replace("0", " ")
             display_string += "\n"
         print(display_string)
 
