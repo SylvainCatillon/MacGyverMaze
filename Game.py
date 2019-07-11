@@ -8,13 +8,13 @@ from Pygame.PyGame import *
 class Game:
     """The current game"""
 
-    ITEM_NAMES_LIST = ["needle", "tube", "ether"]
+    ITEM_NAMES_LIST = ["Needle", "Tube", "Ether"]
+    DISPLAY_CLASS = Display
 
     def __init__(self):
         self.map = Map()
         self.player = Player.Player()
-        self.display = Display(self)
-        #  self.display = GameDisplay(self.map)
+        self.display = self.DISPLAY_CLASS(self)
         self.items_dict = {}
 
     def init_map(self):
@@ -23,7 +23,7 @@ class Game:
         self.player.cords = self.map.start
         for name in self.ITEM_NAMES_LIST:
             item = Item(name)
-            self.items_dict[item.symbol] = item
+            self.items_dict[item.symbol] = item  # Create a dict with item symbol as key and Item object as value
         self.map.place_items(self.items_dict)
 
     def get_new_cords(self):
@@ -42,25 +42,34 @@ class Game:
     def play(self):
         """Play the Game"""
         self.init_map()
-        self.display.choose_language("english")  # add input
-        self.display.welcome()
-        #self.display.start()
+        self.display.start()
         while not self.end():
-            self.display.display_map()
             new_cords = self.get_new_cords()
             if new_cords == "QUIT":
                 break
             self.player.cords = new_cords
+            self.display.move_player()
             self.check_items()
-        self.display.end()
 
     def check_items(self):
         """Check if the player found an item"""
         cords = self.player.cords
         symbol = self.map.get_square(cords)
         if symbol in self.items_dict:
-            self.items_dict[symbol].found = True
+            item = self.items_dict[symbol]
+            item.found = True
+            self.display.item_collected(item.name)
             self.map.squares_dict[cords] = Map.CLEAR_SQUARE
+
+    """
+    Possibilité de fonction avec une liste d'items plutot qu'un dict:
+    def check_items(self):
+        cords = self.player.cords
+        for item in self.items_list:
+            if not item.found and item.cords == cords:
+                item.found = True
+                self.display.item_collected(item.name)
+                self.map.squares_dict[cords] = Map.CLEAR_SQUARE"""
 
     def end(self):
         """Check if the game is over. Return False if the game continue.
@@ -71,8 +80,7 @@ class Game:
         for item in self.items_dict.values():
             if not item.found:
                 victory = False  # Renplacer par compteur?
-        print(victory)
-        """if victory: victory(). else: game_over()"""
+        self.display.end(victory)
         return True
 
     @staticmethod

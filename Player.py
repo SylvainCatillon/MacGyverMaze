@@ -1,7 +1,7 @@
 class Player:
 
     def __init__(self):
-        self.cords = (0,0)
+        self.cords = (0, 0)
 
     @property
     def up(self):

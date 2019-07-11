@@ -16,8 +16,8 @@ class Map:
         self.squares_dict = {}
         self.start = (0, 0)
         self.keeper = (0, 0)
-        self.height = 15
-        self.width = 15
+        self.height = 1
+        self.width = 1
 
     def choose_map(self, map_name):
         """Read the map file, stocking squares in dict (keys == (x, y)), and set start, end, height and width"""
@@ -60,7 +60,6 @@ class Map:
 
     def good_square(self, cords):
         """Return True if the square is good(is on the map and is not a wall)"""
-        print((cords in self.squares_dict) and not (self.is_wall(cords)))
         return cords in self.squares_dict and not self.is_wall(cords)
 
 

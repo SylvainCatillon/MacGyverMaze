@@ -35,7 +35,11 @@ class Display:
     def death(self):
         print(self.language_dict["death"])
 
-    def end(self):
+    def end(self, victory):
+        if victory:
+            print(self.language_dict["congrats"])
+        else:
+            print(self.language_dict["death"])
         print(self.language_dict["end"])
 
     def choose_language(self, language):
@@ -54,6 +58,14 @@ class Display:
                     display_string += self.game.map.get_square((x, y)).replace("0", " ")
             display_string += "\n"
         print(display_string)
+
+    def start(self):
+        self.choose_language("english")  # add input
+        self.welcome()
+        self.display_map()
+
+    def move_player(self):
+        self.display_map()
 
 
 
