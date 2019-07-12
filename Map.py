@@ -1,5 +1,4 @@
-from Item import *
-from random import *
+from random import randrange
 
 
 class Map:
@@ -7,8 +6,8 @@ class Map:
     maps must be squares
     .txt legend: 0 == clear, 1 == wall, S == start, K == keeper"""
 
-    CLEAR_SQUARE = "0"
-    WALL = "1"
+    FLOOR = "F"
+    WALL = "W"
     START = "S"
     KEEPER = "K"
 
@@ -19,7 +18,7 @@ class Map:
         self.height = 1
         self.width = 1
 
-    def choose_map(self, map_name):
+    def load_map(self, map_name):
         """Read the map file, stocking squares in dict (keys == (x, y)), and set start, end, height and width"""
         file_name = map_name + ".txt"
         with open(file_name, "r") as file:
@@ -50,7 +49,7 @@ class Map:
             item.cords = cords
             self.squares_dict[cords] = item.symbol
 
-    def get_square(self, cords):
+    def get_square(self, cords): # rename en get_symbol
         """Return the status of the square"""
         return self.squares_dict[cords]
 

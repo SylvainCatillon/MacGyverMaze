@@ -1,25 +1,25 @@
-from Map import *
-from Item import *
-from Display import *
-import Player
-from Pygame.PyGame import *
+from Map import Map
+from Item import Item
+from Display import Display
+from Player import Player
+from Pygame.PyGame import GameDisplay
 
 
 class Game:
     """The current game"""
 
     ITEM_NAMES_LIST = ["Needle", "Tube", "Ether"]
-    DISPLAY_CLASS = Display
+    DISPLAY_CLASS = GameDisplay
 
     def __init__(self):
         self.map = Map()
-        self.player = Player.Player()
+        self.player = Player()
         self.display = self.DISPLAY_CLASS(self)
         self.items_dict = {}
 
     def init_map(self):
         """Initialize the map, by choosing a map and placing items and player on it"""
-        self.map.choose_map("facile")  # add input?
+        self.map.load_map("facile")  # add input?
         self.player.cords = self.map.start
         for name in self.ITEM_NAMES_LIST:
             item = Item(name)
@@ -30,7 +30,7 @@ class Game:
         """Get the new cords of the player.
         Ask a input direction, quit if the direction is "Q". Else, convert direction into cords by asking Player.
         Verify that the new cords are on the map and are not a wall, and then return the cords"""
-        direction = self.temp_input()
+        direction = self.display.input()
         if direction == "Q":
             return "QUIT"
         # add raise error if direction not in ["UP", "RIGHT", "LEFT", "DOWN"]? Ou inutile parce-que déjà check dans input?
@@ -59,7 +59,7 @@ class Game:
             item = self.items_dict[symbol]
             item.found = True
             self.display.item_collected(item.name)
-            self.map.squares_dict[cords] = Map.CLEAR_SQUARE
+            self.map.squares_dict[cords] = Map.FLOOR
 
     """
     Possibilité de fonction avec une liste d'items plutot qu'un dict:
@@ -69,7 +69,7 @@ class Game:
             if not item.found and item.cords == cords:
                 item.found = True
                 self.display.item_collected(item.name)
-                self.map.squares_dict[cords] = Map.CLEAR_SQUARE"""
+                self.map.squares_dict[cords] = Map.FLOOR"""
 
     def end(self):
         """Check if the game is over. Return False if the game continue.
@@ -83,18 +83,3 @@ class Game:
         self.display.end(victory)
         return True
 
-    @staticmethod
-    def temp_pave_num(inp):
-        """Temporary method to convert input into direction"""
-        return inp.replace("4", "LEFT").replace("8", "UP").replace("2", "DOWN").replace("6", "RIGHT")
-
-    @staticmethod
-    def temp_input():
-        """Temporary method to get input"""
-        inp = ""
-        while inp not in ["DOWN", "RIGHT", "UP", "LEFT"]:
-            inp = input("Choose a direction").upper()
-            if inp == "Q":
-                break
-            inp = Game.temp_pave_num(inp)
-        return inp
