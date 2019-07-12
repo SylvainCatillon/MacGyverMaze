@@ -1,20 +1,23 @@
 from Map import Map
 from Item import Item
-from Display import Display
 from Player import Player
-from Pygame.PyGame import GameDisplay
+#from Terminal.Display import Display
+#from Terminal.Input import Input
+from PyGame.Display import Display
+from PyGame.Input import Input
 
 
 class Game:
     """The current game"""
 
     ITEM_NAMES_LIST = ["Needle", "Tube", "Ether"]
-    DISPLAY_CLASS = GameDisplay
+    CONTINUE = True
 
     def __init__(self):
         self.map = Map()
         self.player = Player()
-        self.display = self.DISPLAY_CLASS(self)
+        self.input = Input()
+        self.display = Display(self)
         self.items_dict = {}
 
     def init_map(self):
@@ -30,7 +33,7 @@ class Game:
         """Get the new cords of the player.
         Ask a input direction, quit if the direction is "Q". Else, convert direction into cords by asking Player.
         Verify that the new cords are on the map and are not a wall, and then return the cords"""
-        direction = self.display.input()
+        direction = self.input.game_input
         if direction == "Q":
             return "QUIT"
         # add raise error if direction not in ["UP", "RIGHT", "LEFT", "DOWN"]? Ou inutile parce-que déjà check dans input?
@@ -46,6 +49,7 @@ class Game:
         while not self.end():
             new_cords = self.get_new_cords()
             if new_cords == "QUIT":
+                Game.CONTINUE = False
                 break
             self.player.cords = new_cords
             self.display.move_player()
@@ -81,5 +85,6 @@ class Game:
             if not item.found:
                 victory = False  # Renplacer par compteur?
         self.display.end(victory)
+        Game.CONTINUE = self.input.end_input
         return True
 

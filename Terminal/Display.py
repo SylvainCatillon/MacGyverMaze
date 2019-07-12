@@ -66,22 +66,3 @@ class Display:
 
     def move_player(self):
         self.display_map()
-
-    @staticmethod
-    def pave_num(inp):
-        """Method to convert input into direction"""
-        return inp.replace("4", "LEFT").replace("8", "UP").replace("2", "DOWN").replace("6", "RIGHT")
-
-    def input(self):
-        """Method to get input"""
-        inp = ""
-        while inp not in ["DOWN", "RIGHT", "UP", "LEFT"]:
-            inp = input("Choose a direction").upper()
-            if inp == "Q":
-                break
-            inp = self.pave_num(inp)
-        return inp
-
-
-
-
