@@ -35,6 +35,7 @@ class Map:
                     self.squares_dict[(x, y)] = f
                     if f == self.START:
                         self.start = (x, y)
+                        self.squares_dict[(x, y)] = self.FLOOR
                     elif f == self.KEEPER:
                         self.keeper = (x, y)
         self.width = x + 1  # length == last index + 1
