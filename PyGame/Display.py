@@ -7,7 +7,7 @@ class Display:
     SCREEN_SIZE = (int(750), int(750))  # Size of the screen, as (width, height)
     VICTORY_TEXT = "Congratulations!\nYou sent the keeper to sleep\nand reached the exit!!!"
     DEFEAT_TEXT = "You tried to run trough\nthe keeper without the items,\nso he crushed your head! Sorry!"
-    END_TEXT = "Press space to play again, escape to quit"
+    END_TEXT = "Press enter to play again, escape to quit"
     TEXT_COLOR = (255, 255, 255)
 
     def __init__(self, game):

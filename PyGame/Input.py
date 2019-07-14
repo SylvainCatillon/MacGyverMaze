@@ -32,7 +32,7 @@ class Input:
         if event.type == pg.QUIT:
             return False
         if event.type == pg.KEYDOWN:
-            if event.key == pg.K_SPACE:
+            if event.key == pg.K_KP_ENTER or event.key == pg.K_RETURN:
                 return True
             if event.key == pg.K_ESCAPE:
                 return False
