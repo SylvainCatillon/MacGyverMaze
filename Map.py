@@ -26,6 +26,7 @@ class Map:
             y_list = string.split("\n")
             height = len(y_list)
             self.height = height
+            width = 0
             y = -1
             for e in y_list:
                 y += 1
@@ -38,7 +39,9 @@ class Map:
                         self.squares_dict[(x, y)] = self.FLOOR
                     elif f == self.KEEPER:
                         self.keeper = (x, y)
-        self.width = x + 1  # length == last index + 1
+                if x >= width:
+                    width = x+1
+        self.width = width
 
     def place_items(self, items_dict):
         """Place randomly the items on the map

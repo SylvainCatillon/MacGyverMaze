@@ -54,7 +54,7 @@ class Display:
         pg.display.set_icon(pg.image.load("resources/tile-crusader-logo.png"))
         self.rect_dict = {
             (x, y): pg.Rect(x*self.square_size[0], y*self.square_size[1], self.square_size[0], self.square_size[1])
-            for y in range(0, self.game.map.height) for x in range(0, self.game.map.width)}
+            for (x, y) in self.game.map.squares_dict}
 
     def start(self):
         """Call the methods to:
