@@ -52,10 +52,22 @@ class Display:
         display_string = ""
         for y in range(self.game.map.height):
             for x in range(self.game.map.width):
-                if (x, y) == self.game.player.cords:
+                cords = (x, y)
+                is_item = False
+                for item in self.game.items_list:
+                    if not item.found and item.cords == cords:
+                        is_item = True
+                        item_symbol = item.name[0].upper()
+                if cords == self.game.player.cords:
                     display_string += "P"
+                elif is_item:
+                    display_string += item_symbol
+                elif cords in self.game.map.floor_list:
+                    display_string += " "
+                elif cords in self.game.map.wall_list:
+                    display_string += "|"
                 else:
-                    display_string += self.game.map.get_square((x, y)).replace("F", " ").replace("W", "|")
+                    display_string += "0"
             display_string += "\n"
         print(display_string)
 

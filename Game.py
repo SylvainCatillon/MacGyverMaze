@@ -18,7 +18,7 @@ class Game:
         self.player = Player()
         self.input = Input()
         self.display = Display(self)
-        self.items_dict = {}
+        self.items_list = []
 
     def init_map(self):
         """Initialize the map, by choosing a map and placing items and player on it"""
@@ -26,8 +26,8 @@ class Game:
         self.player.cords = self.map.start
         for name in self.ITEM_NAMES_LIST:
             item = Item(name)
-            self.items_dict[item.symbol] = item  # Create a dict with item symbol as key and Item object as value
-        self.map.place_items(self.items_dict)
+            self.items_list.append(item)  # Create a dict with item symbol as key and Item object as value
+        self.map.place_items(self.items_list)
 
     def get_new_cords(self):
         """Get the new cords of the player.
@@ -38,7 +38,7 @@ class Game:
             return "QUIT"
         # add raise error if direction not in ["UP", "RIGHT", "LEFT", "DOWN"]? Ou inutile parce-que déjà check dans input?
         cords = self.player.directions_dict()[direction]
-        if not self.map.good_square(cords):
+        if cords not in self.map.floor_list:
             return self.get_new_cords()
         return cords
 
@@ -58,12 +58,10 @@ class Game:
     def check_items(self):
         """Check if the player found an item"""
         cords = self.player.cords
-        symbol = self.map.get_square(cords)
-        if symbol in self.items_dict:
-            item = self.items_dict[symbol]
-            item.found = True
-            self.display.item_collected(item.name)
-            self.map.squares_dict[cords] = Map.SYMBOL_DICT["floor"]
+        for item in self.items_list:
+            if cords == item.cords:
+                item.found = True
+                self.display.item_collected(item.name)
 
     def end(self):
         """Check if the game is over. Return False if the game continue.
@@ -71,7 +69,7 @@ class Game:
         if self.player.cords != self.map.keeper:
             return False
         victory = True
-        for item in self.items_dict.values():
+        for item in self.items_list:
             if not item.found:
                 victory = False  # Remplacer par compteur?
         self.display.end(victory)

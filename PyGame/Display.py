@@ -3,7 +3,9 @@ import pygame as pg
 
 class Display:
     """Use PyGame to display the MazeGyver game"""
-    NB_FLOORS = (20, 13)  # Number of floors on the picture, as (number of columns, number of rows)
+    NB_FLOORS = (20, 13)  # Number of floors on the floors file, as (number of columns, number of rows)
+    FLOOR_INDEX = (14, 6)  # Index of the chosen floor image on the floors file
+    WALL_INDEX = (14, 11)  # Index of the chosen wall image on the floors file
     SCREEN_SIZE = (int(750), int(750))  # Size of the screen, as (width, height)
     VICTORY_TEXT = "Congratulations!\nYou sent the keeper to sleep\nand reached the exit!!!"
     DEFEAT_TEXT = "You tried to run trough\nthe keeper without the items,\nso he crushed your head! Sorry!"
@@ -16,18 +18,19 @@ class Display:
         self.square_size = (1, 1)
         self.game = game
         self.screen = pg.Surface((1, 1))
-        self.rect_dict = {}
+        self.floor_rect_dict = {}
+        self.wall_rect_dict = {}
         self.displayed_player_pos = (0, 0)  # Changez nom
         self.image_dict = {}
-        pg.key.set_repeat(300, 100)
+        pg.key.set_repeat(350, 60)
 
     def load_image(self, name):
         """Load an image from a png file in resources directory, scales it and put it in self.images_dict"""
         file_name = "resources/{}.png".format(name)
         image = pg.image.load(file_name).convert_alpha()
-        self.image_dict[name[0].upper()] = pg.transform.scale(image, self.square_size)
+        self.image_dict[name.lower()] = pg.transform.scale(image, self.square_size)
 
-    def load_background(self, floor_index, wall_index):  # Use spritesheet?
+    def load_background(self):  # Use spritesheet?
         """Load the floor and wall images from a sprite sheet.
         Take for arguments floor_index and wall_index, the wall and floor location on the sprite sheet as
         a tuple (width pixel index, height pixel index)"""
@@ -36,12 +39,12 @@ class Display:
         floor_height = floors.get_height() // self.NB_FLOORS[1]
         floor_image = pg.Surface((floor_width, floor_height))
         floor_image.blit(
-            floors, (0, 0), (floor_width*floor_index[0], floor_height*floor_index[1], floor_width, floor_height))
-        self.image_dict[self.game.map.SYMBOL_DICT["floor"]] = pg.transform.scale(floor_image, self.square_size)
+            floors, (0, 0), (floor_width*self.FLOOR_INDEX[0], floor_height*self.FLOOR_INDEX[1], floor_width, floor_height))
+        self.image_dict["floor"] = pg.transform.scale(floor_image, self.square_size)
         wall_image = pg.Surface((floor_width, floor_height))
         wall_image.blit(
-            floors, (0, 0), (floor_width*wall_index[0], floor_height*wall_index[1], floor_width, floor_height))
-        self.image_dict[self.game.map.SYMBOL_DICT["wall"]] = pg.transform.scale(wall_image, self.square_size)
+            floors, (0, 0), (floor_width*self.WALL_INDEX[0], floor_height*self.WALL_INDEX[1], floor_width, floor_height))
+        self.image_dict["wall"] = pg.transform.scale(wall_image, self.square_size)
 
     def init_screen(self):
         """Initialize the screen"""
@@ -52,9 +55,12 @@ class Display:
         pg.display.set_caption("MazeGyver")
         self.square_size = (adapted_screen_size[0]//self.game.map.width, adapted_screen_size[1]//self.game.map.height)
         pg.display.set_icon(pg.image.load("resources/tile-crusader-logo.png"))
-        self.rect_dict = {
+        self.floor_rect_dict = {
             (x, y): pg.Rect(x*self.square_size[0], y*self.square_size[1], self.square_size[0], self.square_size[1])
-            for (x, y) in self.game.map.squares_dict}
+            for (x, y) in self.game.map.floor_list}
+        self.wall_rect_dict = {
+            (x, y): pg.Rect(x * self.square_size[0], y * self.square_size[1], self.square_size[0], self.square_size[1])
+            for (x, y) in self.game.map.wall_list}
 
     def start(self):
         """Call the methods to:
@@ -63,42 +69,43 @@ class Display:
         -Prepare the Display of the Map
         -Update the screen"""
         self.init_screen()
-        self.load_background((8, 2), (14, 11))
+        self.load_background()
         self.load_image("Player")
         self.load_image("Keeper")
-        for item in self.game.items_dict.values():
-            self.load_image(item.name)
         self.create_map()
-        self.start_player()
+        for item in self.game.items_list:
+            self.display_item(item)
         pg.display.update()
 
     def create_map(self):
         """Prepare the map to be displayed on the screen"""
-        for cords, rect in self.rect_dict.items():
-            symbol = self.game.map.get_square(cords)
-            if symbol == "K":  # To display floor below the keeper and allow transparency
-                self.screen.blit(self.image_dict[self.game.map.SYMBOL_DICT["floor"]], rect)
-            self.screen.blit(self.image_dict[symbol], rect)
-
-    def start_player(self):
-        """Prepare the player to be displayed on the screen"""
-        self.screen.blit(self.image_dict["P"], self.rect_dict[self.game.player.cords]) # change player.cords par current_map.start?
+        for floor_rect in self.floor_rect_dict.values():
+            self.screen.blit(self.image_dict["floor"], floor_rect)
+        for wall_rect in self.wall_rect_dict.values():
+            self.screen.blit(self.image_dict["wall"], wall_rect)
+        self.screen.blit(self.image_dict["keeper"], self.floor_rect_dict[self.game.map.keeper])
+        self.screen.blit(self.image_dict["player"],
+                         self.floor_rect_dict[self.game.player.cords])  # change player.cords par current_map.start?
         self.displayed_player_pos = self.game.player.cords
+
+    def display_item(self, item):
+        self.load_image(item.name)
+        self.screen.blit(self.image_dict[item.name.lower()], self.floor_rect_dict[item.cords])
 
     def move_player(self):
         """Update the screen to follow player movement"""
-        old_rect = self.rect_dict[self.displayed_player_pos]
-        new_rect = self.rect_dict[self.game.player.cords]
-        self.screen.blit(self.image_dict[self.game.map.SYMBOL_DICT["floor"]], old_rect)
-        self.screen.blit(self.image_dict["P"], new_rect)
+        old_rect = self.floor_rect_dict[self.displayed_player_pos]
+        new_rect = self.floor_rect_dict[self.game.player.cords]
+        self.screen.blit(self.image_dict["floor"], old_rect)
+        self.screen.blit(self.image_dict["player"], new_rect)
         self.displayed_player_pos = self.game.player.cords
         pg.display.update([old_rect, new_rect])
 
     def item_collected(self, item_name):
         """Update the screen to delete collected item"""
-        rect = self.rect_dict[self.game.player.cords]
-        self.screen.blit(self.image_dict[self.game.map.SYMBOL_DICT["floor"]], rect)
-        self.screen.blit(self.image_dict["P"], rect)
+        rect = self.floor_rect_dict[self.game.player.cords]
+        self.screen.blit(self.image_dict["floor"], rect)
+        self.screen.blit(self.image_dict["player"], rect)
         pg.display.update(rect)
 
     def end_screen(self, text):
