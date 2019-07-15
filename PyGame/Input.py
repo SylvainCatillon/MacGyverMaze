@@ -13,6 +13,8 @@ class Input:
         if event.type == pg.QUIT:
             return "Q"
         if event.type == pg.KEYDOWN:
+            if event.key == pg.K_ESCAPE:
+                return "Q"
             if event.key == pg.K_UP:
                 return "UP"
             elif event.key == pg.K_RIGHT:

@@ -22,7 +22,7 @@ class Game:
 
     def init_map(self):
         """Initialize the map, by choosing a map and placing items and player on it"""
-        self.map.load_map("facile")  # add input?
+        self.map.load_map("maps/facile")  # add input?
         self.player.cords = self.map.start
         for name in self.ITEM_NAMES_LIST:
             item = Item(name)
@@ -63,17 +63,7 @@ class Game:
             item = self.items_dict[symbol]
             item.found = True
             self.display.item_collected(item.name)
-            self.map.squares_dict[cords] = Map.FLOOR
-
-    """
-    Possibilité de fonction avec une liste d'items plutot qu'un dict:
-    def check_items(self):
-        cords = self.player.cords
-        for item in self.items_list:
-            if not item.found and item.cords == cords:
-                item.found = True
-                self.display.item_collected(item.name)
-                self.map.squares_dict[cords] = Map.FLOOR"""
+            self.map.squares_dict[cords] = Map.SYMBOL_DICT["floor"]
 
     def end(self):
         """Check if the game is over. Return False if the game continue.

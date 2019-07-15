@@ -37,11 +37,11 @@ class Display:
         floor_image = pg.Surface((floor_width, floor_height))
         floor_image.blit(
             floors, (0, 0), (floor_width*floor_index[0], floor_height*floor_index[1], floor_width, floor_height))
-        self.image_dict[self.game.map.FLOOR] = pg.transform.scale(floor_image, self.square_size)
+        self.image_dict[self.game.map.SYMBOL_DICT["floor"]] = pg.transform.scale(floor_image, self.square_size)
         wall_image = pg.Surface((floor_width, floor_height))
         wall_image.blit(
             floors, (0, 0), (floor_width*wall_index[0], floor_height*wall_index[1], floor_width, floor_height))
-        self.image_dict[self.game.map.WALL] = pg.transform.scale(wall_image, self.square_size)
+        self.image_dict[self.game.map.SYMBOL_DICT["wall"]] = pg.transform.scale(wall_image, self.square_size)
 
     def init_screen(self):
         """Initialize the screen"""
@@ -77,7 +77,7 @@ class Display:
         for cords, rect in self.rect_dict.items():
             symbol = self.game.map.get_square(cords)
             if symbol == "K":  # To display floor below the keeper and allow transparency
-                self.screen.blit(self.image_dict[self.game.map.FLOOR], rect)
+                self.screen.blit(self.image_dict[self.game.map.SYMBOL_DICT["floor"]], rect)
             self.screen.blit(self.image_dict[symbol], rect)
 
     def start_player(self):
@@ -89,7 +89,7 @@ class Display:
         """Update the screen to follow player movement"""
         old_rect = self.rect_dict[self.displayed_player_pos]
         new_rect = self.rect_dict[self.game.player.cords]
-        self.screen.blit(self.image_dict[self.game.map.FLOOR], old_rect)
+        self.screen.blit(self.image_dict[self.game.map.SYMBOL_DICT["floor"]], old_rect)
         self.screen.blit(self.image_dict["P"], new_rect)
         self.displayed_player_pos = self.game.player.cords
         pg.display.update([old_rect, new_rect])
@@ -97,7 +97,7 @@ class Display:
     def item_collected(self, item_name):
         """Update the screen to delete collected item"""
         rect = self.rect_dict[self.game.player.cords]
-        self.screen.blit(self.image_dict[self.game.map.FLOOR], rect)
+        self.screen.blit(self.image_dict[self.game.map.SYMBOL_DICT["floor"]], rect)
         self.screen.blit(self.image_dict["P"], rect)
         pg.display.update(rect)
 

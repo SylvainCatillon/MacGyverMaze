@@ -6,10 +6,11 @@ class Map:
     maps must be squares
     .txt legend: 0 == clear, 1 == wall, S == start, K == keeper"""
 
-    FLOOR = "F"
-    WALL = "W"
-    START = "S"
-    KEEPER = "K"
+    SYMBOL_DICT = {
+        "floor": "F",
+        "wall": "W",
+        "start": "S",
+        "keeper": "K"}
 
     def __init__(self):
         self.squares_dict = {}
@@ -20,25 +21,22 @@ class Map:
 
     def load_map(self, map_name):
         """Read the map file, stocking squares in dict (keys == (x, y)), and set start, end, height and width"""
-        file_name = map_name + ".txt"
-        with open(file_name, "r") as file:
+        with open(map_name + ".txt", "r") as file:
             string = file.read()
             y_list = string.split("\n")
             height = len(y_list)
             self.height = height
             width = 0
-            y = -1
-            for e in y_list:
-                y += 1
-                x = -1
-                for f in e:
-                    x += 1
-                    self.squares_dict[(x, y)] = f
-                    if f == self.START:
-                        self.start = (x, y)
-                        self.squares_dict[(x, y)] = self.FLOOR
-                    elif f == self.KEEPER:
-                        self.keeper = (x, y)
+            for y, e in enumerate(y_list):
+                for x, f in enumerate(e): # Raise error si map pas valide???
+                    f = f.upper()
+                    if f in self.SYMBOL_DICT.values():
+                        self.squares_dict[(x, y)] = f
+                        if f == self.SYMBOL_DICT["start"]:
+                            self.start = (x, y)
+                            self.squares_dict[(x, y)] = self.SYMBOL_DICT["floor"]
+                        elif f == self.SYMBOL_DICT["keeper"]:
+                            self.keeper = (x, y)
                 if x >= width:
                     width = x+1
         self.width = width
@@ -47,7 +45,7 @@ class Map:
         """Place randomly the items on the map
         Take a dict of items,and give random cords to each item"""
         floor_list = [key for key, value in self.squares_dict.items()
-                      if key != self.start and key != self.keeper and value != self.WALL]
+                      if key != self.start and key != self.keeper and value != self.SYMBOL_DICT["wall"]]
         for item in items_dict.values():
             cords = floor_list.pop(randrange(len(floor_list)))
             item.cords = cords
@@ -59,7 +57,7 @@ class Map:
 
     def is_wall(self, cords):
         """Return true if there is a wall on the square"""
-        return self.get_square(cords) == self.WALL
+        return self.get_square(cords) == self.SYMBOL_DICT["wall"]
 
     def good_square(self, cords):
         """Return True if the square is good(is on the map and is not a wall)"""
