@@ -83,7 +83,7 @@ class Game:
         victory = True
         for item in self.items_dict.values():
             if not item.found:
-                victory = False  # Renplacer par compteur?
+                victory = False  # Remplacer par compteur?
         self.display.end(victory)
         Game.CONTINUE = self.input.end_input
         return True

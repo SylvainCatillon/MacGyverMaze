@@ -1,6 +1,6 @@
 class Item:
 
-    def __init__(self, name):  # arg cords and position maybe useless
+    def __init__(self, name):
         self.cords = (0, 0)
         self.name = name
         self.symbol = name[0].upper()
