@@ -6,7 +6,7 @@ class Display:
     NB_FLOORS = (20, 13)  # Number of floors on the floors file, as (number of columns, number of rows)
     FLOOR_INDEX = (14, 6)  # Index of the chosen floor image on the floors file
     WALL_INDEX = (14, 11)  # Index of the chosen wall image on the floors file
-    SCREEN_SIZE = (int(800), int(800))  # Size of the screen, as (width, height)
+    SCREEN_SIZE = (int(900), int(900))  # Size of the screen, as (width, height)
     INVENTORY = True  # Set it to True for having an inventory
     TEXT_COLOR = (255, 255, 255)  # Color of the text, as (red index, green index, blue index)
     WELCOME_TEXT = "Welcome!!! You have to found {} items"
