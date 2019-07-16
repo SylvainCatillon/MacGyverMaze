@@ -8,7 +8,7 @@ class Display:
     WALL_INDEX = (14, 11)  # Index of the chosen wall image on the floors file
     SCREEN_SIZE = (int(800), int(800))  # Size of the screen, as (width, height)
     INVENTORY = True  # Set it to True for having an inventory
-    TEXT_COLOR = (255, 255, 255) # Color of the text, as (red index, green index, blue index)
+    TEXT_COLOR = (255, 255, 255)  # Color of the text, as (red index, green index, blue index)
     WELCOME_TEXT = "Welcome!!! You have to found {} items"
     VICTORY_TEXT = "Congratulations!\nYou sent the keeper to sleep\nand reached the exit!!!"
     DEFEAT_TEXT = "You tried to run trough\nthe keeper without the items,\nso he crushed your head! Sorry!"
@@ -70,7 +70,7 @@ class Display:
         floor_height = floors.get_height() // self.NB_FLOORS[1]
         floor_image = pg.Surface((floor_width, floor_height))
         floor_image.blit(floors, (0, 0),
-                         (floor_width*self.FLOOR_INDEX[0],floor_height*self.FLOOR_INDEX[1], floor_width, floor_height))
+                         (floor_width*self.FLOOR_INDEX[0], floor_height*self.FLOOR_INDEX[1], floor_width, floor_height))
         self.image_dict["floor"] = pg.transform.scale(floor_image, self.square_size)
         wall_image = pg.Surface((floor_width, floor_height))
         wall_image.blit(floors, (0, 0),
@@ -177,13 +177,3 @@ class Display:
         else:
             self.prepare_end_screen(self.DEFEAT_TEXT + "\n\n" + self.END_TEXT)
         pg.display.update()
-
-
-
-
-
-
-
-
-
-

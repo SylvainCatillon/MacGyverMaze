@@ -1,8 +1,8 @@
 from Map import Map
 from Item import Item
 from Player import Player
-#from Terminal.Display import Display
-#from Terminal.Input import Input
+# from Terminal.Display import Display
+# from Terminal.Input import Input
 from PyGame.Display import Display
 from PyGame.Input import Input
 
@@ -21,12 +21,14 @@ class Game:
         self.items_list = []
 
     def init_map(self):
-        """Initialize the map, by choosing a map and placing items and player on it"""
+        """Initialize the map,
+        by choosing a map and placing items and player on it"""
         self.map.load_map("maps/facile")  # add input?
         self.player.cords = self.map.start
         for name in self.ITEM_NAMES_LIST:
             item = Item(name)
-            self.items_list.append(item)  # Create a dict with item symbol as key and Item object as value
+            self.items_list.append(item)
+            # Create a dict with item symbol as key and Item object as value
         self.map.place_items(self.items_list)
 
     def get_new_cords(self):
@@ -75,4 +77,3 @@ class Game:
         self.display.end(victory)
         Game.CONTINUE = self.input.end_input
         return True
-
