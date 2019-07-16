@@ -59,7 +59,7 @@ class Game:
         """Check if the player found an item"""
         cords = self.player.cords
         for item in self.items_list:
-            if cords == item.cords:
+            if not item.found and cords == item.cords:
                 item.found = True
                 self.display.item_collected(item.name)
 

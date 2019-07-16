@@ -2,7 +2,7 @@ from random import randrange
 
 
 class Map:
-    """Get the Map from a .txt file, stocking the squares as a list (y indexes) of lists (x indexes).
+    """Get the Map from a .txt file, stocking the squares as a list (y indices) of lists (x indices).
     maps must be squares
     .txt legend: 0 == clear, 1 == wall, S == start, K == keeper"""
 
