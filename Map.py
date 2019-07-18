@@ -24,24 +24,24 @@ class Map:
         """Read the map file, stocking squares in dict (keys == (x, y)), and set start, end, height and width"""
         with open(map_name + ".txt", "r") as file:
             string = file.read()
-            y_list = string.split("\n")
-            height = len(y_list)
-            self.height = height
-            width = 0
-            for y, e in enumerate(y_list):
-                for x, f in enumerate(e): # Raise error si map pas valide???
-                    f = f.upper()
-                    if f in self.SYMBOL_DICT.values():
-                        if f == self.SYMBOL_DICT["wall"]:
-                            self.wall_list.append((x, y))
-                        else:
-                            self.floor_list.append((x, y))
-                            if f == self.SYMBOL_DICT["start"]:
-                                self.start = (x, y)
-                            elif f == self.SYMBOL_DICT["keeper"]:
-                                self.keeper = (x, y)
-                if x >= width:
-                    width = x+1
+        y_list = string.split("\n")
+        height = len(y_list)
+        self.height = height
+        width = 0
+        for y, e in enumerate(y_list):
+            for x, f in enumerate(e): # Raise error si map pas valide???
+                f = f.upper()
+                if f in self.SYMBOL_DICT.values():
+                    if f == self.SYMBOL_DICT["wall"]:
+                        self.wall_list.append((x, y))
+                    else:
+                        self.floor_list.append((x, y))
+                        if f == self.SYMBOL_DICT["start"]:
+                            self.start = (x, y)
+                        elif f == self.SYMBOL_DICT["keeper"]:
+                            self.keeper = (x, y)
+            if x >= width:
+                width = x+1
         self.width = width
 
     def place_items(self, items_list):
