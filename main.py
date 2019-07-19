@@ -1,7 +1,6 @@
 from Game import *
 
 if __name__ == "__main__":
-    while Game.CONTINUE:
-        newGame = Game()
-        newGame.play()
-        del newGame #  Judicieux?
+    newGame = Game()
+    while newGame.keep_playing:
+        newGame.launch()

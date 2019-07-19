@@ -1,6 +1,3 @@
-from random import randrange
-
-
 class Map:
     """Get the Map from a .txt file, stocking the squares as a list (y indices) of lists (x indices).
     maps must be squares
@@ -20,14 +17,22 @@ class Map:
         self.height = 1
         self.width = 1
 
+    @property
+    def available_floor_list(self):
+        return [cords for cords in self.floor_list if
+                cords != self.start and cords != self.keeper]
+
     def load_map(self, map_name):
-        """Read the map file, stocking squares in dict (keys == (x, y)), and set start, end, height and width"""
+        """Read the map file.
+         Fill floor_list and wall_list.
+         Set start position, keeper position, height and width of the map"""
         with open(map_name + ".txt", "r") as file:
             string = file.read()
         y_list = string.split("\n")
         height = len(y_list)
         self.height = height
         width = 0
+        x = 0
         for y, e in enumerate(y_list):
             for x, f in enumerate(e): # Raise error si map pas valide???
                 f = f.upper()
@@ -43,11 +48,3 @@ class Map:
             if x >= width:
                 width = x+1
         self.width = width
-
-    def place_items(self, items_list):
-        """Place randomly the items on the map
-        Take a dict of items,and give random cords to each item"""
-        floor_list = [cords for cords in self.floor_list if cords != self.start and cords != self.keeper]
-        for item in items_list:
-            cords = floor_list.pop(randrange(len(floor_list)))
-            item.cords = cords

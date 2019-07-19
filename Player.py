@@ -20,4 +20,5 @@ class Player:
         return self.cords[0] - 1, self.cords[1]
 
     def directions_dict(self):
-        return {"UP": self.up, "RIGHT": self.right, "DOWN": self.down, "LEFT": self.left}
+        return {"UP": self.up, "RIGHT": self.right,
+                "DOWN": self.down, "LEFT": self.left}

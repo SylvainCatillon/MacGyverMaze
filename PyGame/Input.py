@@ -8,7 +8,7 @@ class Input:
     def game_input(self):
         """Input method to call when the game is running.
         Run until being able to return a correct input.
-        Return "Q" for quit, or a direction ('UP', 'RIGHT', 'DOWN' or 'LEFT')"""
+        Return "Q" for quit, or a direction ('UP', 'RIGHT', 'DOWN', 'LEFT')"""
         event = pg.event.wait()
         if event.type == pg.QUIT:
             return "Q"
