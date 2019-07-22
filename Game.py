@@ -1,24 +1,26 @@
 from random import randrange
+from config import game_config as cfg
 from Map import Map
 from Item import Item
 from Player import Player
-# from Terminal.Display import Display
-# from Terminal.Input import Input
-from PyGame.Display import Display
-from PyGame.Input import Input
+if cfg["use_pygame"]:
+    from PyGame.Display import Display
+    from PyGame.Input import Input
+else:
+    from Terminal.Display import Display
+    from Terminal.Input import Input
 
 
 class Game:
-    """The current game"""
-
-    ITEM_NAMES_LIST = ["Needle", "Tube", "Ether"]
+    """Class containing the current game.
+    Control the progress of the game, by interacting with other classes"""
 
     def __init__(self):
         self.keep_playing = True
         self.player = Player()
-        self.items_list = [Item(name) for name in self.ITEM_NAMES_LIST]
+        self.items_list = [Item(name) for name in cfg["item_names_list"]]
         self.map = Map()
-        self.map.load_map("maps/facile")
+        self.map.load_map("maps/map1")
         self.input = Input()
         self.display = Display(
             self.map.width, self.map.height,
@@ -45,7 +47,7 @@ class Game:
         return cords
 
     def check_items(self):
-        """Check if the player found an item"""
+        """Check if the player has found an item"""
         cords = self.player.cords
         for item in self.items_list:
             if not item.found and cords == item.cords:
@@ -60,7 +62,7 @@ class Game:
 
     def end(self):
         """Check if the game is over. Return False if the game continue.
-        Return true and calculate victory if the game is ending"""
+        Return True and calculate victory if the game is ending"""
         if self.player.cords != self.map.keeper:
             return False
         victory = True

@@ -1,26 +1,16 @@
 import pygame as pg
+from config import display_config as cfg
 
 
 class Display:
     """Use PyGame to display the MazeGyver game"""
-    NB_FLOORS = (20, 13)  # Number of floors on the floors file, as (number of columns, number of rows)
-    FLOOR_INDEX = (14, 6)  # Index of the chosen floor image on the floors file
-    WALL_INDEX = (14, 11)  # Index of the chosen wall image on the floors file
-    SCREEN_SIZE = (int(900), int(900))  # Size of the screen, as (width, height)
-    INVENTORY = True  # Set it to True for having an inventory
-    TEXT_COLOR = (255, 255, 255)  # Color of the text, as (red index, green index, blue index)
-    WELCOME_TEXT = "Welcome!!! You have to found {} items"
-    VICTORY_TEXT = "Congratulations!\nYou sent the keeper to sleep\nand reached the exit!!!"
-    DEFEAT_TEXT = "You tried to run trough\nthe keeper without the items,\nso he crushed your head! Sorry!"
-    END_TEXT = "Press enter to play again, escape to quit"
 
     def __init__(self, map_width, map_height, floor_list, wall_list):
-        """Constructor of Display. Take the current game for argument"""
         pg.init()
-        self.screen_width = self.SCREEN_SIZE[0]-(
-                self.SCREEN_SIZE[0] % map_width)
-        self.screen_height = self.SCREEN_SIZE[1]-(
-                self.SCREEN_SIZE[1] % map_height)
+        self.screen_width = cfg["screen_size"][0]-(
+                cfg["screen_size"][0] % map_width)
+        self.screen_height = cfg["screen_size"][1]-(
+                cfg["screen_size"][1] % map_height)
         self.screen = pg.display.set_mode(
             (self.screen_width, self.screen_height))
         pg.display.set_caption("MazeGyver")
@@ -36,7 +26,7 @@ class Display:
             (x, y): pg.Rect(x * self.square_width, y * self.square_height,
                             self.square_width, self.square_height)
             for (x, y) in wall_list}
-        if self.INVENTORY:
+        if cfg["inventory"]:
             self.screen = pg.display.set_mode(
                 (self.screen_width, self.screen_height+self.square_height))
             self.items_found = 0
@@ -60,17 +50,17 @@ class Display:
     def load_background(self):
         """Load the floor and wall images from a sprite sheet."""
         sprite_sheet = pg.image.load("resources/floor-tiles-20x13.png")
-        floor_width = sprite_sheet.get_width() // self.NB_FLOORS[0]
-        floor_height = sprite_sheet.get_height() // self.NB_FLOORS[1]
+        floor_width = sprite_sheet.get_width() // cfg["nb_floors"][0]
+        floor_height = sprite_sheet.get_height() // cfg["nb_floors"][1]
         floor_image = pg.Surface((floor_width, floor_height))
-        floor_area = (floor_width*self.FLOOR_INDEX[0], floor_height
-                      * self.FLOOR_INDEX[1], floor_width, floor_height)
+        floor_area = (floor_width*cfg["floor_index"][0], floor_height *
+                      cfg["floor_index"][1], floor_width, floor_height)
         floor_image.blit(sprite_sheet, (0, 0), floor_area)
         self.image_dict["floor"] = pg.transform.scale(
             floor_image, self.square_size)
         wall_image = pg.Surface((floor_width, floor_height))
-        wall_area = (floor_width*self.WALL_INDEX[0], floor_height
-                     * self.WALL_INDEX[1], floor_width, floor_height)
+        wall_area = (floor_width*cfg["wall_index"][0], floor_height *
+                     cfg["wall_index"][1], floor_width, floor_height)
         wall_image.blit(sprite_sheet, (0, 0), wall_area)
         self.image_dict["wall"] = pg.transform.scale(
             wall_image, self.square_size)
@@ -88,8 +78,8 @@ class Display:
             rect = pg.Rect(text_width+self.square_width*i, self.screen_height,
                            self.square_width, self. square_height)
             self.inventory_rect_list.append(rect)
-        text_surf = self.font.render(self.WELCOME_TEXT.format(len(items_list)),
-                                     True, self.TEXT_COLOR)
+        text_surf = self.font.render(cfg["welcome_text"].format(
+            len(items_list)), True, cfg["text_color"])
         text_rect = self.inventory_rect_list[0]
         if text_surf.get_width() > text_rect.width:
             text_surf = pg.transform.scale(text_surf, (text_rect.width,
@@ -120,7 +110,7 @@ class Display:
         self.load_background()
         self.load_image("Player")
         self.load_image("Keeper")
-        if self.INVENTORY:
+        if cfg["inventory"]:
             self.prepare_inventory(items_list)
         self.prepare_map(start, keeper)
         for item in items_list:
@@ -139,13 +129,13 @@ class Display:
     def item_collected(self, item_name, cords):
         """Update the screen to delete collected item.
         If Inventory is on, display a message and the item"""
-        if self.INVENTORY:
+        if cfg["inventory"]:
             self.items_found += 1
             text_rect = self.inventory_rect_list[0]
             item_rect = self.inventory_rect_list[self.items_found]
             text_surf = pg.Surface(text_rect.size)
-            text_surf.blit(self.font.render("Item collected: " + item_name,
-                                            True, self.TEXT_COLOR), (0, 0))
+            text_surf.blit(self.font.render(cfg["item_collected"] + item_name,
+                                            True, cfg["text_color"]), (0, 0))
             self.screen.blit(text_surf, text_rect)
             self.screen.blit(self.image_dict[item_name.lower()], item_rect)
             pg.display.update([text_rect, item_rect])
@@ -154,13 +144,13 @@ class Display:
         self.screen.blit(self.image_dict["player"], rect)
         pg.display.update(rect)
 
-    def prepare_end_screen(self, text):
+    def form_end_screen(self, text):
         """Prepare the end screen.
         Take the text to be displayed for argument"""
         end_screen = pg.Surface(self.screen.get_size())
         lines_list = text.split("\n")
         for i, line in enumerate(lines_list):
-            text_surf = self.font.render(line, True, self.TEXT_COLOR)
+            text_surf = self.font.render(line, True, cfg["text_color"])
             text_height = text_surf.get_height()
             if text_surf.get_width() > end_screen.get_width():
                 text_surf = pg.transform.scale(
@@ -173,17 +163,16 @@ class Display:
         self.screen.blit(end_screen, (0, 0))
 
     def end(self, victory):
-        """Call end_screen() with the right text to prepare the end screen,
+        """Call form_end_screen() with the right text,
         and display the end screen"""
         if victory:
-            self.prepare_end_screen(self.VICTORY_TEXT + "\n\n" + self.END_TEXT)
+            self.form_end_screen(cfg["victory_text"]+"\n\n"+cfg["end_text"])
         else:
-            self.prepare_end_screen(self.DEFEAT_TEXT + "\n\n" + self.END_TEXT)
+            self.form_end_screen(cfg["defeat_text"]+"\n\n"+cfg["end_text"])
         pg.display.update()
 
     def reset(self):
         """Reset some values of the display to prepare a new game"""
-        if self.INVENTORY:
+        if cfg["inventory"]:
             self.inventory_rect_list = []
             self.items_found = 0
-

@@ -1,4 +1,6 @@
 class Player:
+    """Class of the main character of the game.
+    Contains the position of the player"""
 
     def __init__(self):
         self.cords = (0, 0)

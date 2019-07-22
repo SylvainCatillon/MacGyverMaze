@@ -1,13 +1,8 @@
-class Map:
-    """Get the Map from a .txt file, stocking the squares as a list (y indices) of lists (x indices).
-    maps must be squares
-    .txt legend: 0 == clear, 1 == wall, S == start, K == keeper"""
+from config import map_config as cfg
 
-    SYMBOL_DICT = {
-        "floor": "F",
-        "wall": "W",
-        "start": "S",
-        "keeper": "K"}
+
+class Map:
+    """The map of the game"""
 
     def __init__(self):
         self.wall_list = []
@@ -34,16 +29,16 @@ class Map:
         width = 0
         x = 0
         for y, e in enumerate(y_list):
-            for x, f in enumerate(e): # Raise error si map pas valide???
+            for x, f in enumerate(e):
                 f = f.upper()
-                if f in self.SYMBOL_DICT.values():
-                    if f == self.SYMBOL_DICT["wall"]:
+                if f in cfg["symbol_dict"].values():
+                    if f == cfg["symbol_dict"]["wall"]:
                         self.wall_list.append((x, y))
                     else:
                         self.floor_list.append((x, y))
-                        if f == self.SYMBOL_DICT["start"]:
+                        if f == cfg["symbol_dict"]["start"]:
                             self.start = (x, y)
-                        elif f == self.SYMBOL_DICT["keeper"]:
+                        elif f == cfg["symbol_dict"]["keeper"]:
                             self.keeper = (x, y)
             if x >= width:
                 width = x+1
