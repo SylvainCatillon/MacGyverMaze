@@ -9,7 +9,9 @@ Use the requirment.txt to install the needed package:
 
 # Config
 You can change variables in config.py to change the config:
+
 - display_config:
+  - floor_tiles: Path of the floors' sprite sheet.
   - nb_floors: Number of sprites on the floors sprite sheet. Change only if you change of spritesheet
   - floor_index : Index of the floor image, as (column index, row index). Change if you want to change of floor image
   - wall_index : Index of the wall image, as (column index, row index). Change if you want to change of wall image
@@ -17,3 +19,10 @@ You can change variables in config.py to change the config:
   - inventory: Set it to True if you want the inventory to be displayed
   - text_color: You can change the color of the text, with tree indices between 0 and 255: (red, green, blue)
   - You can change the messages of the game by changing several text variables
+
+- map_config:
+  - symbol_dict: A dictionnaire with the symbols of the map. Change it if you change the map file
+
+- game_config:
+  - item_names_list: Change it if you changes the items of the map. *The image's file name must be the same as the item*
+  - use_pygame: Set it to True if you want to use PyGame. If set to False, the game will be displayed on the console.
