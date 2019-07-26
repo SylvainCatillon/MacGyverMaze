@@ -5,7 +5,7 @@ If you reach the exit without the items, you die.
 
 # Getting started
 Use the requirment.txt to install the needed package:
-'pip install -r requirements.txt'
+`pip install -r requirements.txt`
 
 # Config
 You can change variables in config.py to change the config:
