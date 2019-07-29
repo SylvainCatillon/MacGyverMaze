@@ -49,7 +49,7 @@ class Display:
 
     def load_background(self):
         """Load the floor and wall images from a sprite sheet."""
-        sprite_sheet = pg.image.load("resources/floor-tiles-20x13.png")
+        sprite_sheet = pg.image.load(cfg["floor_tiles"])
         floor_width = sprite_sheet.get_width() // cfg["nb_floors"][0]
         floor_height = sprite_sheet.get_height() // cfg["nb_floors"][1]
         floor_image = pg.Surface((floor_width, floor_height))
@@ -134,7 +134,7 @@ class Display:
             text_rect = self.inventory_rect_list[0]
             item_rect = self.inventory_rect_list[self.items_found]
             text_surf = pg.Surface(text_rect.size)
-            text_surf.blit(self.font.render(cfg["item_collected"] + item_name,
+            text_surf.blit(self.font.render(cfg["item_text"] + item_name,
                                             True, cfg["text_color"]), (0, 0))
             self.screen.blit(text_surf, text_rect)
             self.screen.blit(self.image_dict[item_name.lower()], item_rect)

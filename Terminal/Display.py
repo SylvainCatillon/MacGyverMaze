@@ -24,7 +24,7 @@ class Display:
         print(cfg["end_text"])
 
     def item_collected(self, item_name, cords):
-        print(cfg["item_collected"] + item_name)
+        print(cfg["item_text"] + item_name)
         del self.item_dict[cords]
         self.display_map(cords)
 

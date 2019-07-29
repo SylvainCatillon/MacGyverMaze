@@ -1,4 +1,5 @@
 display_config = dict(
+    floor_tiles="resources/floor-tiles-20x13.png",
     nb_floors=(20, 13),  # Number of sprites on the sheet: (columns, rows)
     floor_index=(14, 6),  # Index of the floor image on the floors file
     wall_index=(14, 11),  # Index of the wall image on the floors file
@@ -6,7 +7,7 @@ display_config = dict(
     inventory=True,  # Set it to True for having an inventory
     text_color=(255, 255, 255),  # (red index, green index, blue index)
     welcome_text="Welcome! You have to find {} items",
-    item_collected="Item collected: ",
+    item_text="Item collected: ",
     victory_text="Congratulations!\nYou sent the keeper to sleep\n"
                  "and reached the exit!!!",
     defeat_text="You tried to run trough\nthe keeper without the items,"
