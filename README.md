@@ -24,5 +24,5 @@ You can change variables in config.py to change the config:
   - symbol_dict: A dictionary with the symbols of the map. Change it if you change the map file
 
 - game_config:
-  - item_names_list: Change it if you changes the items of the map. *The image's file name must be the same as the item*
+  - item_names_list: Change it if you changes the items of the map. **The image's file name must be the same as the item**
   - use_pygame: Set it to True if you want to use PyGame. If set to False, the game will be displayed on the console.
