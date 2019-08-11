@@ -11,7 +11,7 @@ class Input:
         """Method to get input during the game"""
         inp = ""
         while inp not in ["DOWN", "RIGHT", "UP", "LEFT"]:
-            inp = input("Choose a direction").upper()
+            inp = input("Use the numeric keypad to choose a direction").upper()
             if inp == "Q":
                 break
             inp = self.pave_num(inp)
