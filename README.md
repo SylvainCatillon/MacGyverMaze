@@ -26,3 +26,4 @@ You can change variables in config.py to change the config:
 
 - game_config:
   - item_names_list: Change it if you changes the items of the map. **The image's file name must be the same as the item's**
+  - use_pygame: Set it to True to use PyGame.
