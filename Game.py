@@ -28,7 +28,9 @@ class Game:
 
     def place_items(self):
         """Place randomly the items on the map"""
-        square_list = self.map.available_floor_list
+        square_list = [cords for cords in self.map.floor_list if
+                       cords != self.map.start_cords and
+                       cords != self.map.keeper_cords]
         for item in self.items_list:
             cords = square_list.pop(randrange(len(square_list)))
             item.cords = cords
@@ -41,7 +43,7 @@ class Game:
         direction = self.input.game_input
         if direction == "Q":
             return "QUIT"
-        cords = self.player.directions_dict()[direction]
+        cords = self.player.directions_dict[direction]
         if cords not in self.map.floor_list:
             return self.get_new_cords()
         return cords
@@ -63,8 +65,8 @@ class Game:
     def end(self):
         """Check if the game is over. Return False if the game continue.
         Return True and calculate victory if the game is ending"""
-        if self.player.cords != self.map.keeper:
-            return False
+        if self.player.cords != self.map.keeper_cords:
+            return self.play()
         victory = True
         for item in self.items_list:
             if not item.found:
@@ -73,7 +75,6 @@ class Game:
         self.keep_playing = self.input.end_input
         if self.keep_playing:
             self.reset_game()
-        return True
 
     def play(self):
         """Play the Game"""
@@ -84,12 +85,12 @@ class Game:
             self.player.cords = new_cords
             self.display.move_player(new_cords)
             self.check_items()
-            if not self.end():
-                return self.play()
+            self.end()
 
     def launch(self):
         """Launch the game"""
-        self.player.cords = self.map.start
+        self.player.cords = self.map.start_cords
         self.place_items()
-        self.display.start(self.items_list, self.map.start, self.map.keeper)
+        self.display.start(
+            self.items_list, self.map.start_cords, self.map.keeper_cords)
         self.play()

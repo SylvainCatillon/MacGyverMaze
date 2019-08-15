@@ -72,15 +72,15 @@ class Display:
         Every time an item is found, a message and the image of the item
         can be displayed in the inventory"""
         text_width = self.screen_width-self.square_width*len(items_list)
-        self.inventory_rect_list.append(
-            pg.Rect(0, self.screen_height, text_width, self.square_height))
+        text_rect = pg.Rect(0, self.screen_height,
+                            text_width, self.square_height)
+        self.inventory_rect_list.append(text_rect)
         for i in range(len(items_list)):
             rect = pg.Rect(text_width+self.square_width*i, self.screen_height,
                            self.square_width, self. square_height)
             self.inventory_rect_list.append(rect)
         text_surf = self.font.render(cfg["welcome_text"].format(
             len(items_list)), True, cfg["text_color"])
-        text_rect = self.inventory_rect_list[0]
         if text_surf.get_width() > text_rect.width:
             text_surf = pg.transform.scale(text_surf, (text_rect.width,
                                                        text_surf.get_height()))
@@ -96,7 +96,6 @@ class Display:
                          self.floor_rect_dict[keeper])
         self.screen.blit(self.image_dict["player"],
                          self.floor_rect_dict[start])
-        self.displayed_player_pos = start
 
     def prepare_item(self, item):
         """Load the image of an item, and prepare it to be displayed on screen.
@@ -113,6 +112,7 @@ class Display:
         if cfg["inventory"]:
             self.prepare_inventory(items_list)
         self.prepare_map(start, keeper)
+        self.displayed_player_pos = start
         for item in items_list:
             self.prepare_item(item)
         pg.display.update()
@@ -158,7 +158,7 @@ class Display:
             text_width = text_surf.get_width()
             x_cord = end_screen.get_width()/2 - text_width/2
             y_cord = end_screen.get_height()/2 - (
-                    (len(lines_list)*text_height)/2 - i*text_height)
+                    (len(lines_list))/2 - i)*text_height
             end_screen.blit(text_surf, (x_cord, y_cord))
         self.screen.blit(end_screen, (0, 0))
 
